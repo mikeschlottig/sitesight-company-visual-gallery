@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'sonner';
 import {
   Table,
   TableBody,
@@ -43,7 +44,47 @@ export function CompanyTable({ companies, isLoading, onSort, onDetailsClick }: C
     }
     setSelectedRows(newSelectedRows);
   };
-  const isAllSelected = selectedRows.size > 0 && selectedRows.size === companies.length;
+  const handleExport = () => {
+    if (selectedRows.size === 0) {
+      toast.warning("No rows selected", {
+        description: "Please select at least one company to export.",
+      });
+      return;
+    }
+    const selectedCompanies = companies.filter(c => selectedRows.has(c.id));
+    const headers = ['Name', 'Domain', 'Description', 'Tags', 'Last Updated'];
+    const escapeCsvField = (field: any): string => {
+      const stringField = String(field ?? '');
+      if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+        return `"${stringField.replace(/"/g, '""')}"`;
+      }
+      return stringField;
+    };
+    const csvRows = selectedCompanies.map(c => 
+      [
+        c.name,
+        c.domain,
+        c.description,
+        c.tags.join('; '), // Use semicolon to avoid comma issues
+        c.lastUpdated
+      ].map(escapeCsvField).join(',')
+    );
+    const csvContent = [headers.join(','), ...csvRows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'sitesight_export.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success("Export successful!", {
+      description: `${selectedCompanies.length} companies have been exported to CSV.`,
+    });
+  };
+  const isAllSelected = !isLoading && companies.length > 0 && selectedRows.size === companies.length;
   const isSomeSelected = selectedRows.size > 0 && !isAllSelected;
   return (
     <div className="space-y-4">
@@ -53,7 +94,7 @@ export function CompanyTable({ companies, isLoading, onSort, onDetailsClick }: C
           {selectedRows.size > 0 && (
             <span className="text-sm text-muted-foreground">{selectedRows.size} selected</span>
           )}
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
@@ -66,7 +107,7 @@ export function CompanyTable({ companies, isLoading, onSort, onDetailsClick }: C
               <TableHead className="w-[50px]">
                 <Checkbox
                   checked={isAllSelected || isSomeSelected}
-                  onCheckedChange={handleSelectAll}
+                  onCheckedChange={(checked) => handleSelectAll(!!checked)}
                   aria-label="Select all rows"
                   data-state={isSomeSelected ? 'indeterminate' : (isAllSelected ? 'checked' : 'unchecked')}
                 />
@@ -117,7 +158,7 @@ export function CompanyTable({ companies, isLoading, onSort, onDetailsClick }: C
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell className="text-muted-foreground">{company.lastUpdated}</TableCell>
+                  <TableCell className="text-muted-foreground">{new Date(company.lastUpdated).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -127,7 +168,9 @@ export function CompanyTable({ companies, isLoading, onSort, onDetailsClick }: C
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuItem onClick={() => onDetailsClick(company)}>View Details</DropdownMenuItem>
-                        <DropdownMenuItem>Visit Website</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <a href={`https://${company.domain}`} target="_blank" rel="noopener noreferrer">Visit Website</a>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

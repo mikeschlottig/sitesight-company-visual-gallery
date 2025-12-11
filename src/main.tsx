@@ -15,6 +15,7 @@ import { HomePage } from '@/pages/HomePage'
 import { GalleryPage } from '@/pages/GalleryPage';
 import { ListPage } from '@/pages/ListPage';
 import { TablePage } from '@/pages/TablePage';
+import { AdminPage } from '@/pages/AdminPage';
 import { AppLayout } from '@/components/layout/AppLayout';
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: "/gallery", element: <GalleryPage /> },
       { path: "/list", element: <ListPage /> },
       { path: "/table", element: <TablePage /> },
+      { path: "/admin", element: <AdminPage /> },
     ]
   }
 ]);

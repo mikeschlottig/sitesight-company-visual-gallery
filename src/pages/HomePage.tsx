@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { CompanyCard, CompanyCardSkeleton } from '@/components/CompanyCard';
 import { useCompaniesQuery } from '@/lib/hooks/useCompaniesQuery';
@@ -19,22 +20,34 @@ export function HomePage() {
               background: 'radial-gradient(at 40% 20%, hsla(28,100%,74%,.3) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(189,100%,56%,.3) 0px, transparent 50%), radial-gradient(at 0% 50%, hsla(355,100%,93%,.3) 0px, transparent 50%), radial-gradient(at 80% 50%, hsla(340,100%,76%,.3) 0px, transparent 50%), radial-gradient(at 0% 100%, hsla(22,100%,77%,.3) 0px, transparent 50%), radial-gradient(at 80% 100%, hsla(242,100%,70%,.3) 0px, transparent 50%), radial-gradient(at 0% 0%, hsla(343,100%,76%,.3) 0px, transparent 50%)'
             }} />
             <div className="relative z-10">
-              <h1 className="text-5xl md:text-7xl font-bold font-display text-balance leading-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-display text-balance leading-tight bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
                 Discover Companies, Visually
-              </h1>
-              <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
                 SiteSight transforms company discovery into a visual experience. Explore businesses through their digital storefronts with our curated gallery.
-              </p>
-              <div className="mt-10 flex justify-center gap-4">
-                <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-primary/50">
+              </motion.p>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-primary/50 w-full sm:w-auto">
                   <Link to="/gallery">
                     Explore Gallery <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button asChild size="lg" variant="outline">
+                <Button asChild size="lg" variant="outline" className="w-full sm:w-auto">
                   <Link to="/table">View as Table</Link>
                 </Button>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -52,7 +65,9 @@ export function HomePage() {
             {isLoading
               ? Array.from({ length: 4 }).map((_, i) => <CompanyCardSkeleton key={i} />)
               : data?.data.map((company) => (
-                  <CompanyCard key={company.id} company={company} onDetailsClick={setSelectedCompany} />
+                  <div key={company.id} className="transition-all duration-300 hover:shadow-glow rounded-lg">
+                    <CompanyCard company={company} onDetailsClick={setSelectedCompany} />
+                  </div>
                 ))}
           </div>
         </section>
