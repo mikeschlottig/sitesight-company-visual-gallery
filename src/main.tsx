@@ -6,7 +6,6 @@ import { createRoot } from 'react-dom/client'
 import {
   createBrowserRouter,
   RouterProvider,
-  Outlet,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -16,15 +15,8 @@ import { HomePage } from '@/pages/HomePage'
 import { GalleryPage } from '@/pages/GalleryPage';
 import { ListPage } from '@/pages/ListPage';
 import { TablePage } from '@/pages/TablePage';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { Toaster } from '@/components/ui/sonner';
+import { AppLayout } from '@/components/layout/AppLayout';
 const queryClient = new QueryClient();
-const AppLayout = () => (
-  <MainLayout>
-    <Outlet />
-    <Toaster richColors closeButton />
-  </MainLayout>
-);
 const router = createBrowserRouter([
   {
     element: <AppLayout />,

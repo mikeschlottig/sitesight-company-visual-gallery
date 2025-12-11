@@ -33,7 +33,7 @@ export function TablePage() {
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8 md:py-10 lg:py-12">
-          {isError && <div className="text-center text-destructive">Error: {(error as Error).message}</div>}
+          {isError && <div className="text-center text-destructive">Error: {error.message}</div>}
           <CompanyTable
             companies={data?.data || []}
             isLoading={isLoading}

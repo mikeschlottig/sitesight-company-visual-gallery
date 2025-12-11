@@ -10,7 +10,6 @@ export function ListPage() {
   const [selectedCompany, setSelectedCompany] = React.useState<Company | null>(null);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const q = searchParams.get('q') || '';
-  // For list view, we can fetch more items per page
   const { data, isLoading, isError, error } = useCompaniesQuery({ page, pageSize: 8, q });
   const handlePageChange = (newPage: number) => {
     setSearchParams(prev => {
@@ -28,7 +27,7 @@ export function ListPage() {
               Scan through detailed entries of each company in our directory.
             </p>
           </div>
-          {isError && <div className="text-center text-destructive">Error: {(error as Error).message}</div>}
+          {isError && <div className="text-center text-destructive">Error: {error.message}</div>}
           <div className="space-y-6">
             {isLoading
               ? Array.from({ length: 5 }).map((_, i) => <CompanyCardSkeleton key={i} variant="list" />)

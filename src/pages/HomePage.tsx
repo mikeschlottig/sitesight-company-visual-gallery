@@ -26,7 +26,7 @@ export function HomePage() {
                 SiteSight transforms company discovery into a visual experience. Explore businesses through their digital storefronts with our curated gallery.
               </p>
               <div className="mt-10 flex justify-center gap-4">
-                <Button asChild size="lg" className="btn-gradient px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200">
+                <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200 shadow-lg hover:shadow-primary/50">
                   <Link to="/gallery">
                     Explore Gallery <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
