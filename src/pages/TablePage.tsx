@@ -5,14 +5,13 @@ import { useCompaniesQuery } from '@/lib/hooks/useCompaniesQuery';
 import { CompanyDetailSheet } from '@/components/CompanyDetailSheet';
 import { Company } from '@/lib/api';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle } from 'lucide-react';
 export function TablePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCompany, setSelectedCompany] = React.useState<Company | null>(null);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const q = searchParams.get('q') || '';
   const sort = searchParams.get('sort') || 'name:asc';
-  const { data, isLoading, isError, error, refetch } = useCompaniesQuery({ page, pageSize: 15, q, sort });
+  const { data, isLoading, isError, error } = useCompaniesQuery({ page, pageSize: 15, q, sort });
   const handlePageChange = (newPage: number) => {
     setSearchParams(prev => {
       prev.set('page', newPage.toString());
@@ -34,24 +33,14 @@ export function TablePage() {
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8 md:py-10 lg:py-12">
-          {isError ? (
-            <div className="text-center py-12">
-              <AlertTriangle className="mx-auto h-12 w-12 text-destructive mb-4" />
-              <h3 className="text-xl font-semibold text-destructive mb-2">Something went wrong</h3>
-              <p className="text-muted-foreground mb-6">{error?.message || 'Failed to load company data.'}</p>
-              <Button onClick={() => refetch()}>Retry</Button>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <CompanyTable
-                companies={data?.data || []}
-                isLoading={isLoading}
-                onSort={handleSort}
-                onDetailsClick={setSelectedCompany}
-              />
-            </div>
-          )}
-          {!isLoading && !isError && data && (data.totalPages ?? 1) > 1 && (
+          {isError && <div className="text-center text-destructive">Error: {(error as Error).message}</div>}
+          <CompanyTable
+            companies={data?.data || []}
+            isLoading={isLoading}
+            onSort={handleSort}
+            onDetailsClick={setSelectedCompany}
+          />
+          {!isLoading && data && data.totalPages > 1 && (
             <div className="mt-8 flex justify-center gap-2">
               <Button
                 variant="outline"

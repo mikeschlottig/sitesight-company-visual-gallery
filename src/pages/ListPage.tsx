@@ -1,63 +1,22 @@
-import React, { useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { CompanyCard, CompanyCardSkeleton } from '@/components/CompanyCard';
 import { useCompaniesQuery } from '@/lib/hooks/useCompaniesQuery';
 import { CompanyDetailSheet } from '@/components/CompanyDetailSheet';
 import { Company } from '@/lib/api';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Search } from 'lucide-react';
 export function ListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCompany, setSelectedCompany] = React.useState<Company | null>(null);
   const page = parseInt(searchParams.get('page') || '1', 10);
   const q = searchParams.get('q') || '';
-  const { data, isLoading, isError, error, refetch } = useCompaniesQuery({ page, pageSize: 8, q });
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [page]);
+  // For list view, we can fetch more items per page
+  const { data, isLoading, isError, error } = useCompaniesQuery({ page, pageSize: 8, q });
   const handlePageChange = (newPage: number) => {
     setSearchParams(prev => {
       prev.set('page', newPage.toString());
       return prev;
     });
-  };
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="space-y-8 md:space-y-10">
-          {Array.from({ length: 5 }).map((_, i) => <CompanyCardSkeleton key={i} variant="list" />)}
-        </div>
-      );
-    }
-    if (isError) {
-      return (
-        <div className="text-center py-12">
-          <AlertTriangle className="mx-auto h-12 w-12 text-destructive mb-4" />
-          <h3 className="text-xl font-semibold text-destructive mb-2">Something went wrong</h3>
-          <p className="text-muted-foreground mb-6">{error?.message || 'Failed to load company data.'}</p>
-          <Button onClick={() => refetch()}>Retry</Button>
-        </div>
-      );
-    }
-    if (!data?.data || data.data.length === 0) {
-      return (
-        <div className="text-center py-12">
-          <Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-          <h3 className="text-xl font-semibold mb-2">No companies found</h3>
-          <p className="text-muted-foreground mb-6">Try adjusting your search or filters.</p>
-          <Button asChild>
-            <Link to="/list?q=">Clear Search</Link>
-          </Button>
-        </div>
-      );
-    }
-    return (
-      <div className="space-y-8 md:space-y-10">
-        {data.data.map((company) => (
-          <CompanyCard key={company.id} company={company} variant="list" onDetailsClick={setSelectedCompany} />
-        ))}
-      </div>
-    );
   };
   return (
     <>
@@ -69,8 +28,15 @@ export function ListPage() {
               Scan through detailed entries of each company in our directory.
             </p>
           </div>
-          {renderContent()}
-          {!isLoading && !isError && data && data.totalPages > 1 && (
+          {isError && <div className="text-center text-destructive">Error: {(error as Error).message}</div>}
+          <div className="space-y-6">
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => <CompanyCardSkeleton key={i} variant="list" />)
+              : data?.data.map((company) => (
+                  <CompanyCard key={company.id} company={company} variant="list" onDetailsClick={setSelectedCompany} />
+                ))}
+          </div>
+          {!isLoading && data && data.totalPages > 1 && (
             <div className="mt-12 flex justify-center gap-2">
               <Button
                 variant="outline"
