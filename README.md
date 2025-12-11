@@ -1,6 +1,6 @@
 # SiteSight — Company Visual Gallery
 
-[![Deploy to Cloudflare Workers]([cloudflarebutton])]([cloudflarebutton])
+[![Deploy to Cloudflare Workers]([![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mikeschlottig/sitesight-company-visual-gallery))]([![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mikeschlottig/sitesight-company-visual-gallery))
 
 SiteSight is a high-end, agency-quality web application that transforms a simple educational Ruby app into a multi-view product showcase. It enables users to discover and explore companies visually through OpenGraph images or homepage screenshots, presented in intuitive Gallery, List, and Table views. Built on Cloudflare Workers for edge performance, it delivers a polished, responsive frontend with modern UI components and smooth interactions.
 
@@ -99,7 +99,7 @@ SiteSight is optimized for Cloudflare Workers. The app serves static assets via 
 
 After deployment, your app will be live at `<project-name>.workers.dev`. Bind a custom domain via the Cloudflare dashboard.
 
-[![Deploy to Cloudflare Workers]([cloudflarebutton])]([cloudflarebutton])
+[![Deploy to Cloudflare Workers]([![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mikeschlottig/sitesight-company-visual-gallery))]([![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mikeschlottig/sitesight-company-visual-gallery))
 
 ## Extending the Project
 
